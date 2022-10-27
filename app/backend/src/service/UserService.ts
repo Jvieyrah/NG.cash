@@ -19,4 +19,12 @@ export default class UserService {
     const token = tokenManager.generateToken({ email, role });
     return token;
   };
+
+  validateLogin = async (token: string): Promise<IUser> => {
+    // verifica se o token é válido
+    // const tokenCheck = token;
+    // if (!tokenCheck) throw new StructuredError('Token not found', 401);
+    const user = tokenManager.verifyToken(token);
+    return user;
+  };
 }

@@ -107,3 +107,11 @@ describe('Teste da rota login', () => {
     expect(httpResponse.body).to.have.property('token').to.be.a('string');
   });
 });
+
+describe('Teste da rota login/validate', () => {
+  it('quando a requisição é feita sem informar um token, deve ser retornado um status 401', async () => {
+    const httpResponse = await chai.request(app).post('/login/validate');
+    expect(httpResponse.status).to.be.equal(401);
+  });
+});
+
