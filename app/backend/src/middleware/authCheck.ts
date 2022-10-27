@@ -1,19 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
-// import { ErrorRequestHandler } from 'express';
- import StructuredError from '../errors/StructuredError';
- 
+import tokenManager from '../helpers/tokenManager';
+import StructuredError from '../errors/StructuredError';
 
-const authCheck = ( req: Request, res: Response, next: NextFunction) => {
-  // try{
+const authCheck = (req: Request, res: Response, next: NextFunction) => {
   const token: string | any = req.headers.authorization;
   if (!token) {
     throw new StructuredError('Token not found', 401);
   }
-  // const user = tokenManager.verifyToken(token);
+  const user = tokenManager.verifyToken(token);
+  if (!user) {
+    throw new StructuredError('Invalid token', 401);
+  }
   next();
-  // } catch (error) {
-  //   next(new StructuredError(err.message, 500));
-  // }
 };
 
 export default authCheck;
