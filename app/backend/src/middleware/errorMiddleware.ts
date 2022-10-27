@@ -1,6 +1,6 @@
 import { ErrorRequestHandler } from 'express';
 
-const errorMiddleware: ErrorRequestHandler = (err, req, res) => {
+const errorMiddleware: ErrorRequestHandler = (err, req, res, next) => {
   if (err.status) {
     return res.status(err.status).send({ message: err.message });
   }
