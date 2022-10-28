@@ -4,7 +4,6 @@ export interface IUserID {
 
 export interface IUserUsername {
   username: string;
-  role: string;
 }
 
 export interface IUserRole {

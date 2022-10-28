@@ -1,214 +1,192 @@
 import * as sinon from 'sinon';
 import * as chai from 'chai';
+import * as mocha from 'mocha';
+import userModel from '../database/models/sequelizUsers';
+import teamModel from '../database/models/sequelizeTeams';
+import * as Jwt from 'jsonwebtoken';
+import 'dotenv/config';
 // @ts-ignore
 import chaiHttp = require('chai-http');
 
 import { app } from '../app';
+const secret = process.env.JWT_SECRET || ('secret' as Jwt.Secret);
 // import Example from '../database/models/ExampleModel';
 
-import { Response } from 'superagent';
+// import { Response } from 'superagent';
+// import IUser from '../entities/Iuser.interface';
 
 chai.use(chaiHttp);
 
 const { expect } = chai;
 
-const teams = [
-  [
-    {
-      "id": 1,
-      "teamName": "Avaí/Kindermann"
-    },
-    {
-      "id": 2,
-      "teamName": "Bahia"
-    },
-    {
-      "id": 3,
-      "teamName": "Botafogo"
-    },
-    {
-      "id": 4,
-      "teamName": "Corinthians"
-    },
-    {
-      "id": 5,
-      "teamName": "Cruzeiro"
-    },
-    {
-      "id": 6,
-      "teamName": "Ferroviária"
-    },
-    {
-      "id": 7,
-      "teamName": "Flamengo"
-    },
-    {
-      "id": 8,
-      "teamName": "Grêmio"
-    },
-    {
-      "id": 9,
-      "teamName": "Internacional"
-    },
-    {
-      "id": 10,
-      "teamName": "Minas Brasília"
-    },
-    {
-      "id": 11,
-      "teamName": "Napoli-SC"
-    },
-    {
-      "id": 12,
-      "teamName": "Palmeiras"
-    },
-    {
-      "id": 13,
-      "teamName": "Real Brasília"
-    },
-    {
-      "id": 14,
-      "teamName": "Santos"
-    },
-    {
-      "id": 15,
-      "teamName": "São José-SP"
-    },
-    {
-      "id": 16,
-      "teamName": "São Paulo"
-    }
-  ]
-
-describe('Teste da rota login', () => {
-  /**
-   * Exemplo do uso de stubs com tipos
-   */
-
-  // let chaiHttpResponse: Response;
-
-  // before(async () => {
-  //   sinon
-  //     .stub(Example, "findOne")
-  //     .resolves({
-  //       ...<Seu mock>
-  //     } as Example);
-  // });
-
-  // after(()=>{
-  //   (Example.findOne as sinon.SinonStub).restore();
-  // })
-
-  // it('...', async () => {
-  //   chaiHttpResponse = await chai
-  //      .request(app)
-  //      ...
-
-  //   expect(...)
-  // });
-
+describe('1: Teste da rota login', () => {
   // casos de missin parameters
-  it('quando a requisição é feita não permita o acesso sem informar um email, deve ser retornado um status 400', async () => {
+  it('1-1: quando a requisição é feita não permita o acesso sem informar um email, deve ser retornado um status 400', async () => {
     const httpResponse = await chai.request(app).post('/login').send({ password: 'secret_admin' });
     expect(httpResponse.status).to.be.equal(400);
   });
 
-  it('quando a requisição é feita não permita o acesso sem informar um email, deve ser retornado um erro no formato string', async () => {
+  it('1-2: quando a requisição é feita não permita o acesso sem informar um email, deve ser retornado um erro no formato string', async () => {
     const httpResponse = await chai.request(app).post('/login').send({ password: 'secret_admin' });
     expect(httpResponse.body).to.have.property('message').to.be.a('string');
     expect(httpResponse.body.message).to.deep.equal('All fields must be filled');
   });
 
-  it('quando a requisição é feita não permita o acesso sem informar uma senha, deve ser retornado um status 400', async () => {
-    const httpResponse = await chai.request(app).post('/login').send({ email: 'admin@admin.com' });
+  it('1-3: quando a requisição é feita não permita o acesso sem informar uma senha, deve ser retornado um status 400', async () => {
+     const httpResponse = await chai.request(app).post('/login').send({ email: 'admin@admin.com' });
     expect(httpResponse.status).to.be.equal(400);
   });
 
-  it('quando a requisição é feita não permita o acesso sem informar um email, deve ser retornado um erro no formato string', async () => {
+  it('1-4: quando a requisição é feita não permita o acesso sem informar um email, deve ser retornado um erro no formato string', async () => {
     const httpResponse = await chai.request(app).post('/login').send({ email: 'admin@admin.com' });
     expect(httpResponse.body).to.have.property('message').to.be.a('string');
     expect(httpResponse.body.message).to.deep.equal('All fields must be filled');
   });
 
-  it('quando a requisição é feita não permita o acesso sem informar uma senha, deve ser retornado um status 400', async () => {
+  it('1-5: quando a requisição é feita não permita o acesso sem informar uma senha, deve ser retornado um status 400', async () => {
     const httpResponse = await chai.request(app).post('/login').send({ email: 'admin@admin.com' });
     expect(httpResponse.status).to.be.equal(400);
   });
 
-  it('quando a requisição é feita não permita o acesso sem informar uma senha, deve ser retornado um erro no formato string', async () => {
+  it('1-6: quando a requisição é feita não permita o acesso sem informar uma senha, deve ser retornado um erro no formato string', async () => {
     const httpResponse = await chai.request(app).post('/login').send({ email: 'admin@admin.com' });
     expect(httpResponse.body).to.have.property('message').to.be.a('string');
     expect(httpResponse.body.message).to.deep.equal('All fields must be filled');
   });
 
   // casos de email inválido
-  it('quando a requisição é feita com um email inválido, deve ser retornado um status 401', async () => {
+  it('1-7: quando a requisição é feita com um email inválido, deve ser retornado um status 401', async () => {
+    sinon.stub(userModel,'findOne').resolves(null);
     const httpResponse = await chai.request(app).post('/login').send({ email: 'fakeuser@fakedomain.com', password: 'secret_admin' });
     expect(httpResponse.status).to.be.equal(401);
   });
 
-  it('quando a requisição é feita com um email inválido, deve ser retornado um erro no formato string', async () => {
+  it('1-8: quando a requisição é feita com um email inválido, deve ser retornado um erro no formato string', async () => {
     const httpResponse = await chai.request(app).post('/login').send({ email: 'fakeuser@fakedomain.com', password: 'secret_admin' });
     expect(httpResponse.body).to.have.property('message').to.be.a('string');
     expect(httpResponse.body.message).to.deep.equal('Incorrect email or password');
   });
 
   // casos de senha inválida
-  it('quando a requisição é feita com uma senha inválida, deve ser retornado um status 401', async () => {
+  it('1-9: quando a requisição é feita com uma senha inválida, deve ser retornado um status 401', async () => {
     const httpResponse = await chai.request(app).post('/login').send({email: 'admin@admin.com', password: 'bogus_password'});
     expect(httpResponse.status).to.be.equal(401);
   });
 
-  it('quando a requisição é feita com uma senha inválida, deve ser retornado um erro no formato string', async () => {
+  it('1-10: quando a requisição é feita com uma senha inválida, deve ser retornado um erro no formato string', async () => {
     const httpResponse = await chai.request(app).post('/login').send({email: 'admin@admin.com', password: 'bogus_password'});
     expect(httpResponse.body).to.have.property('message').to.be.a('string');
     expect(httpResponse.body.message).to.deep.equal('Incorrect email or password');
+    sinon.restore();
   });
 
 /// caso de sucesso 
-  it('quando a requisição é feita com sucesso, deve ser retornado um status 200', async () => {
+  it('1-11: quando a requisição é feita com sucesso, deve ser retornado um status 200', async () => {
+    const user = {
+      id: 1,
+      username: 'admin',
+      email: 'admin@admin.com',
+      password: '$2a$08$xi.Hxk1czAO0nZR..B393u10aED0RQ1N3PAEXQ7HxtLjKPEZBu.PW',
+      role: 'admin',
+    }; 
+    sinon.stub(userModel,'findOne').resolves(user as any);
+    // before(async () => sinon.stub(userModel,'findOne').resolves(user as any));
+    // after(() => { sinon.restore() });
+
     const httpResponse = await chai.request(app).post('/login').send({ email: 'admin@admin.com', password: 'secret_admin' });
     expect(httpResponse.status).to.be.equal(200);
   });
-  it('quando a requisição é feita com sucesso, deve ser retornado token no formato string', async () => {
+
+  it('1-12: quando a requisição é feita com sucesso, deve ser retornado token no formato string', async () => {
+    const user = {
+      id: 1,
+      username: 'admin',
+      email: 'admin@admin.com',
+      password: '$2a$08$xi.Hxk1czAO0nZR..B393u10aED0RQ1N3PAEXQ7HxtLjKPEZBu.PW',
+      role: 'admin',
+    };  
+    // before(async () => sinon.stub(userModel, 'findOne').resolves(user as any));
+    // after(()=>{ sinon.restore() });
     const httpResponse = await chai.request(app).post('/login').send({ email: 'admin@admin.com', password: 'secret_admin' });
     expect(httpResponse.body).to.have.property('token').to.be.a('string');
+    sinon.restore();
   });
 });
 
-describe('Teste da rota login/validate', () => {
-  it('quando a requisição é feita sem informar um token, deve ser retornado um status 401', async () => {
-    const httpResponse = await chai.request(app).post('/login/validate');
+
+describe('2: Teste da rota login/validate', () => {
+  it('2-1: quando a requisição é feita sem informar um token, deve ser retornado um status 401', async () => {
+    const httpResponse = await chai.request(app).get('/login/validate');
     expect(httpResponse.status).to.be.equal(401);
+    expect(httpResponse.body.message).to.be.equal('Token not found');
+  });
+
+  it('2-2: quando a requisição é feita com um token inválido, deve ser retornado um status 401', async () => {
+    const httpResponse = await chai.request(app).get('/login/validate').set({ authorization: 'invalid_token' });
+    expect(httpResponse.status).to.be.equal(500);
+    expect(httpResponse.body.message).to.be.equal('jwt malformed');
+  });
+
+  it('2-3: quando a requisição é feita com um token incorreto (expirado), deve ser retornado um status 500', async () => {
+    const token = Jwt.sign({ data: { id: 1, email: 'blablabla' } }, secret, { algorithm: 'HS256', expiresIn: '1s' });
+    const httpResponse = await chai.request(app).get('/login/validate').set({ authorization: token });
+    expect(httpResponse.status).to.be.equal(200);
+    expect(httpResponse.body.message).to.be.undefined
+  });
+
+  it('2-4: quando a requisição é feita com um token válido, deve ser retornado um status 200', async () => {
+    const token = Jwt.sign({ data: { email: 'admin@admin.com', role: 'admin' }}, secret, { algorithm: 'HS256', expiresIn: '1h' });
+    const httpResponse = await chai.request(app).get('/login/validate').set({ authorization: token });
+    expect(httpResponse.status).to.be.equal(200);
+    expect(httpResponse.body.role).to.be.equal('admin');
   });
 });
 
-describe('Teste da rota teams ', () => {
-  it(' quando a resuisição é feita com sucesso deve ser retornado um status 200', async () => {
+describe('3: Teste da rota teams ', () => {
+  const response: any = [{
+    "id": 16,
+    "teamName": "São Paulo"
+  },
+  {
+    "id": 17,
+    "teamName": "São Paulo2"
+  }];
+  it('3-1: quando a requisição é feita com sucesso deve ser retornado um status 200', async () => {
+    sinon.stub(teamModel, 'findAll').resolves(response as any);
     const httpResponse = await chai.request(app).get('/teams');
     expect(httpResponse.status).to.be.equal(200);
   });
-  it(' quando a resuisição é feita com sucesso deve ser retornado um array', async () => {
+  it('3-2: quando a requisição é feita com sucesso deve ser retornado um array', async () => {
     const httpResponse = await chai.request(app).get('/teams');
     expect(httpResponse.body).to.be.an('array');
-    expect(httpResponse.body).to.deep.equal(teams);
+    expect(httpResponse.body).to.deep.equal(response);
+    sinon.restore();
   });
 });
 
-describe('Teste da rota teams/:id', () => {
-  it('quando a requisição é feita com sucesso deve ser retornado um status 200', async () => {
-    const httpResponse = await chai.request(app).get('/teams/1');
+describe('4:  Teste da rota teams/:id', () => {
+  const responseOne: any = [{
+    "id": 16,
+    "teamName": "São Paulo"
+  }];
+  it('4-1: quando a requisição é feita com sucesso deve ser retornado um status 200', async () => {
+    sinon.stub(teamModel, 'findOne').resolves(responseOne as any);
+    const httpResponse = await chai.request(app).get('/teams/16');
     expect(httpResponse.status).to.be.equal(200);
   });
-  it('quando a requisição é feita com sucesso deve ser retornado um objeto', async () => {
-    const httpResponse = await chai.request(app).get('/teams/1');
-    expect(httpResponse.body).to.be.an('object');
-    expect(httpResponse.body).to.deep.equal(teams[0]);
+  it('4-2: quando a requisição é feita com sucesso deve ser retornado um objeto', async () => {
+    const httpResponse = await chai.request(app).get('/teams/16');
+    expect(httpResponse.body).to.be.an('array');
+    expect(httpResponse.body).to.deep.equal(responseOne);
+    sinon.restore();
   });
-  it('quando a requisição é feita com um id inválido deve ser retornado um status 404', async () => {
-    const httpResponse = await chai.request(app).get('/teams/100');
+  it('4-3: quando a requisição é feita com um id inválido deve ser retornado um status 404', async () => {
+    sinon.stub(teamModel, 'findOne').resolves(null as any);
+    const httpResponse = await chai.request(app).get('/teams/106');
     expect(httpResponse.status).to.be.equal(404);
+    expect(httpResponse.body.message).to.be.equal('Team not found');
+    sinon.restore();
   });
-}
+});
 
 
