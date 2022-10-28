@@ -2,21 +2,21 @@ import { Model, DataTypes } from 'sequelize';
 import db from '.';
 // import OtherModel from './OtherModel';
 
-class teams extends Model {
+class matches extends Model {
 // id: number {
 //   type: DataTypes.INTEGER,
 // }
 // declare <campo>: <tipo>;
 }
 
-teams.init({
+matches.init({
   id: {
     primaryKey: true,
     autoIncrement: true,
     allowNull: true,
     type: DataTypes.INTEGER,
   },
-  teamName: {
+  homeTeam: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
@@ -64,4 +64,4 @@ teams.init({
 // Example.hasMany(OtherModel, { foreignKey: 'campoC', as: 'campoEstrangeiroC' });
 // Example.hasMany(OtherModel, { foreignKey: 'campoD', as: 'campoEstrangeiroD' });
 
-export default teams;
+export default matches;
