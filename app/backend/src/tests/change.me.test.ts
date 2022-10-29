@@ -3,10 +3,14 @@ import * as chai from 'chai';
 import * as mocha from 'mocha';
 import userModel from '../database/models/sequelizUsers';
 import teamModel from '../database/models/sequelizeTeams';
+import matchModel from '../database/models/sequelizeMatches';
 import * as Jwt from 'jsonwebtoken';
 import 'dotenv/config';
 // @ts-ignore
 import chaiHttp = require('chai-http');
+import allMatchesMock from '../helpers/mocks/allMatchesMock';
+import trueMatchesMock from '../helpers/mocks/trueMatchesMock';
+import falseMatchesMock from '../helpers/mocks/falseMatchesMock';
 
 import { app } from '../app';
 const secret = process.env.JWT_SECRET || ('secret' as Jwt.Secret);
@@ -189,4 +193,38 @@ describe('4:  Teste da rota teams/:id', () => {
   });
 });
 
-
+describe('5: Teste da rota matches ', () => {
+  it('5-1: quando a requisição /matches é feita com sucesso deve ser retornado um status 200', async () => {
+    sinon.stub(matchModel, 'findAll').resolves(allMatchesMock as any);
+    const httpResponse = await chai.request(app).get('/matches');
+    expect(httpResponse.status).to.be.equal(200);
+  });
+  it('5-2: quando a requisição /matches é feita com sucesso deve ser retornado um array', async () => {
+    const httpResponse = await chai.request(app).get('/matches');
+    expect(httpResponse.body).to.be.an('array');
+    expect(httpResponse.body).to.deep.equal(allMatchesMock);
+    sinon.restore();
+  });
+  it('5-3: quando a requisição /matches?inProgress=true é feita com sucesso deve ser retornado um status 200', async () => {
+    sinon.stub(matchModel, 'findAll').resolves(trueMatchesMock as any);
+    const httpResponse = await chai.request(app).get('/matches?inProgress=true');
+    expect(httpResponse.status).to.be.equal(200);
+  });
+  it('5-4: quando a requisição /matches?inProgress=true é feita com sucesso deve ser retornado um array', async () => {
+    const httpResponse = await chai.request(app).get('/matches?inProgress=true');
+    expect(httpResponse.body).to.be.an('array');
+    expect(httpResponse.body).to.deep.equal(trueMatchesMock);
+    sinon.restore();
+  });
+  it('5-5: quando a requisição /matches?inProgress=false é feita com sucesso deve ser retornado um status 200', async () => {
+    sinon.stub(matchModel, 'findAll').resolves(falseMatchesMock as any);
+    const httpResponse = await chai.request(app).get('/matches?inProgress=false');
+    expect(httpResponse.status).to.be.equal(200);
+  });
+  it('5-6: quando a requisição /matches?inProgress=false é feita com sucesso deve ser retornado um array', async () => {
+    const httpResponse = await chai.request(app).get('/matches?inProgress=false');
+    expect(httpResponse.body).to.be.an('array');
+    expect(httpResponse.body).to.deep.equal(falseMatchesMock);
+    sinon.restore();
+  });
+});     
