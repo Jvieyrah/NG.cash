@@ -7,11 +7,11 @@ module.exports = {
         allowNull: true,
         type: Sequelize.INTEGER,
       },
-      team_name: {
+      home_team: {
         type: Sequelize.INTEGER,
          allowNull: false,
          references: {
-            model: 'Teams',
+            model: 'teams',
             key: 'id',
          },
          onUpdate: 'CASCADE',
@@ -25,7 +25,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-            model: 'Teams',
+            model: 'teams',
             key: 'id',
           },
         onUpdate: 'CASCADE',
@@ -33,6 +33,10 @@ module.exports = {
       },
       away_team_goals: {
         type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      in_Progress: {
+        type: Sequelize.BOOLEAN,
         allowNull: false,
       },
     });

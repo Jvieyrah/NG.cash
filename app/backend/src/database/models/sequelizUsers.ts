@@ -6,7 +6,11 @@ class users extends Model {
   // id: number {
   //   type: DataTypes.INTEGER,
   // }
-  // declare <campo>: <tipo>;
+  declare id: number;
+  declare username: string;
+  declare role: string;
+  declare email: string;
+  declare password: string;
 }
 
 users.init({

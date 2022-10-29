@@ -1,12 +1,14 @@
 import { Model, DataTypes } from 'sequelize';
 import db from '.';
-// import OtherModel from './OtherModel';
+import teamModel from './sequelizeTeams';
 
 class matches extends Model {
-// id: number {
-//   type: DataTypes.INTEGER,
-// }
-// declare <campo>: <tipo>;
+  declare id: number;
+  declare homeTeam: number;
+  declare homeTeamGoals: number;
+  declare awayTeam: number;
+  declare awayTeamGoals: number;
+  declare inProgress: boolean;
 }
 
 matches.init({
@@ -44,6 +46,10 @@ matches.init({
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  inProgress: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+  },
 }, {
 // ... Outras configs
   underscored: true,
@@ -58,8 +64,11 @@ matches.init({
 * Associations 1:N devem ficar em uma das instâncias de modelo
 * */
 
-// OtherModel.belongsTo(Example, { foreignKey: 'campoA', as: 'campoEstrangeiroA' });
-// OtherModel.belongsTo(Example, { foreignKey: 'campoB', as: 'campoEstrangeiroB' });
+matches.belongsTo(teamModel, { foreignKey: 'homeTeam', as: 'teamHome' });
+matches.belongsTo(teamModel, { foreignKey: 'awayTeam', as: 'teamAway' });
+
+// teamModel.hasMany(matches, { foreignKey: 'homeTeam', as: 'homeTeamName' });
+// teamModel.hasMany(matches, { foreignKey: 'awayTeam', as: 'awayTeamName' });
 
 // Example.hasMany(OtherModel, { foreignKey: 'campoC', as: 'campoEstrangeiroC' });
 // Example.hasMany(OtherModel, { foreignKey: 'campoD', as: 'campoEstrangeiroD' });

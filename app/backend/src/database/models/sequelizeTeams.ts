@@ -6,7 +6,8 @@ class teams extends Model {
 // id: number {
 //   type: DataTypes.INTEGER,
 // }
-// declare <campo>: <tipo>;
+  declare id: number;
+  declare teamName: string;
 }
 
 teams.init({
