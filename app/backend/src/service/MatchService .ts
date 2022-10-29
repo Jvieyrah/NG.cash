@@ -1,6 +1,6 @@
 import matches from '../database/models/sequelizeMatches';
 import teams from '../database/models/sequelizeTeams';
-import ITeam from '../entities/Iteam.interface';
+import Imatch from '../entities/IMatch.interface';
 
 export default class MatchService {
   private _matchModel: typeof matches;
@@ -10,7 +10,7 @@ export default class MatchService {
     this._teamModel = teams;
   }
 
-  public async getMatches(): Promise<ITeam[]> {
+  public async getMatches(): Promise<Imatch[]> {
     const allMatches = await this._matchModel.findAll(
       { include: [
         { model: this._teamModel, as: 'teamHome', attributes: { exclude: ['id'] } },
@@ -18,6 +18,18 @@ export default class MatchService {
       ],
       },
     );
-    return allMatches as unknown as ITeam[];
+    return allMatches as unknown as Imatch[];
+  }
+
+  public async getMatchInProgess(Query:boolean): Promise<Imatch[]> {
+    const allMatches = await this._matchModel.findAll(
+      { where: { inProgress: Query },
+        include: [
+          { model: this._teamModel, as: 'teamHome', attributes: { exclude: ['id'] } },
+          { model: this._teamModel, as: 'teamAway', attributes: { exclude: ['id'] } },
+        ],
+      },
+    );
+    return allMatches as unknown as Imatch[];
   }
 }
