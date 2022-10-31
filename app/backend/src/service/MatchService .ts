@@ -39,12 +39,22 @@ export default class MatchService {
     if (homeTeam === awayTeam) {
       throw new StructuredError('It is not possible to create a match with two equal teams', 422);
     }
-    const checkTeams = await this._teamModel.findAll({ where: { id: [homeTeam, awayTeam] } });
-    if (checkTeams.length !== 2) {
+    const isTeamHome = await this._teamModel.findOne({ where: { id: homeTeam } });
+    const isTeamAway = await this._teamModel.findOne({ where: { id: awayTeam } });
+    if (!isTeamHome || !isTeamAway) {
       throw new StructuredError('There is no team with such id!', 404);
     }
     const newMatchInProgress = { ...newMatch, inProgress: true };
     const match = await this._matchModel.create(newMatchInProgress);
     return match as unknown as Imatch;
+  }
+
+  public async updateMatch(updatedMatch: Imatch, id: string): Promise<Imatch> {
+    const match = await this._matchModel.update(updatedMatch, { where: { id } });
+    if (!match[0]) {
+      throw new StructuredError('There is no match with such id!', 404);
+    }
+    const updatedMatchInProgress = this._matchModel.findOne({ where: { id } });
+    return updatedMatchInProgress as unknown as Imatch;
   }
 }
