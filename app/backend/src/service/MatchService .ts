@@ -1,6 +1,7 @@
 import matches from '../database/models/sequelizeMatches';
 import teams from '../database/models/sequelizeTeams';
 import Imatch from '../entities/IMatch.interface';
+import StructuredError from '../errors/StructuredError';
 
 export default class MatchService {
   private _matchModel: typeof matches;
@@ -31,5 +32,19 @@ export default class MatchService {
       },
     );
     return allMatches as unknown as Imatch[];
+  }
+
+  public async createMatch(newMatch: Imatch): Promise<Imatch> {
+    const { homeTeam, awayTeam } = newMatch;
+    if (homeTeam === awayTeam) {
+      throw new StructuredError('It is not possible to create a match with two equal teams', 422);
+    }
+    const checkTeams = await this._teamModel.findAll({ where: { id: [homeTeam, awayTeam] } });
+    if (checkTeams.length !== 2) {
+      throw new StructuredError('There is no team with such id!', 404);
+    }
+    const newMatchInProgress = { ...newMatch, inProgress: true };
+    const match = await this._matchModel.create(newMatchInProgress);
+    return match as unknown as Imatch;
   }
 }

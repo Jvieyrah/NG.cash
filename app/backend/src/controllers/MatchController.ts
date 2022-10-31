@@ -26,4 +26,9 @@ export default class MatchController {
     const progressMatches = await this.getMatchInProgess(inProgress);
     return res.status(200).json(progressMatches);
   }
+
+  public async createMatch(req: Request, res: Response): Promise<Response> {
+    const newMatch = await this.matchService.createMatch(req.body);
+    return res.status(201).json(newMatch);
+  }
 }

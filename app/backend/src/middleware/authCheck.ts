@@ -9,7 +9,7 @@ const authCheck = (req: Request, res: Response, next: NextFunction) => {
   }
   const user = tokenManager.verifyToken(token);
   if (!user) {
-    throw new StructuredError('Invalid token', 401);
+    throw new StructuredError('Token must be a valid token', 401);
   }
   next();
 };
