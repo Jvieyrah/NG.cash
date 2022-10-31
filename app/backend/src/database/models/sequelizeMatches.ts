@@ -25,8 +25,8 @@ matches.init({
       model: 'teams',
       key: 'id',
     },
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
+    // onUpdate: 'CASCADE',
+    // onDelete: 'CASCADE',
   },
   homeTeamGoals: {
     type: DataTypes.INTEGER,
@@ -39,8 +39,8 @@ matches.init({
       model: 'teams',
       key: 'id',
     },
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
+    // onUpdate: 'CASCADE',
+    // onDelete: 'CASCADE',
   },
   awayTeamGoals: {
     type: DataTypes.INTEGER,

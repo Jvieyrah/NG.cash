@@ -36,4 +36,10 @@ export default class MatchController {
     const updatedMatch = await this.matchService.updateMatch(req.body, req.params.id);
     return res.status(200).json(updatedMatch);
   }
+
+  public async updateFinishedMatch(req: Request, res: Response): Promise<Response> {
+    const inProgress = false;
+    const updatedMatch = await this.matchService.updateMatch(inProgress, req.params.id);
+    return res.status(200).json(updatedMatch);
+  }
 }

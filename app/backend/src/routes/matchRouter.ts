@@ -13,16 +13,21 @@ const matchService = new MatchService();
 
 const matchCI = new MatchController(matchService);
 
-matchRouter.get('/matches', (req, res) => matchCI.getMatches(req, res));
-matchRouter.post('/matches', authCheck, fieldCheck([
-  ...matchFields,
-  ...scoreFields,
-]), (req, res) => matchCI.createMatch(req, res));
+matchRouter.patch(
+  '/matches/:id/finish',
+  authCheck,
+  (req, res) => matchCI.updateFinishedMatch(req, res),
+);
 matchRouter.patch(
   '/matches/:id',
   authCheck,
   fieldCheck(scoreFields),
   (req, res) => matchCI.updateMatch(req, res),
 );
+matchRouter.get('/matches', (req, res) => matchCI.getMatches(req, res));
+matchRouter.post('/matches', authCheck, fieldCheck([
+  ...matchFields,
+  ...scoreFields,
+]), (req, res) => matchCI.createMatch(req, res));
 
 export default matchRouter;

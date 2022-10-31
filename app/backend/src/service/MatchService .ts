@@ -49,8 +49,12 @@ export default class MatchService {
     return match as unknown as Imatch;
   }
 
-  public async updateMatch(updatedMatch: Imatch, id: string): Promise<Imatch> {
-    const match = await this._matchModel.update(updatedMatch, { where: { id } });
+  public async updateMatch(updatedMatch: Imatch | boolean | any, id: string): Promise<Imatch> {
+    let update = updatedMatch;
+    if (typeof updatedMatch === 'boolean') {
+      update = { inProgress: updatedMatch };
+    }
+    const match = await this._matchModel.update(update, { where: { id } });
     if (!match[0]) {
       throw new StructuredError('There is no match with such id!', 404);
     }
