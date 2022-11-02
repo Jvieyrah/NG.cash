@@ -45,6 +45,23 @@ const getPoints = (team:homeOrAway, match:Imatch[]): number => // retorna os pon
 const efficency = (team:homeOrAway, match:Imatch[]): number => // retorna a eficiência do time
   ((getPoints(team, match) / (match.length * 3)) * 100).toFixed(2) as unknown as number;
 
+const putInOrder = (matches: ILeaderboard[]): ILeaderboard[] | number => // coloca os times em ordem de pontos
+  matches.sort((a, b) => {
+    if (a.totalPoints !== b.totalPoints) {
+      return b.totalPoints - a.totalPoints;
+    }
+    if (a.goalsBalance !== b.goalsBalance) {
+      return b.goalsBalance - a.goalsBalance;
+    }
+    if (a.goalsFavor !== b.goalsFavor) {
+      return b.goalsFavor - a.goalsFavor;
+    }
+    if (a.goalsOwn !== b.goalsOwn) {
+      return b.goalsOwn - a.goalsOwn;
+    }
+    return 0;
+  });
+
 export default class LeaderboardService {
   private _matchService: MatchService;
   leaderboard: ILeaderboard[];
@@ -91,33 +108,13 @@ export default class LeaderboardService {
     return this.leaderboard;
   }
 
-  public putInOrder(matches: ILeaderboard[]) {
-    return matches.sort((a, b) => {
-      if (a.totalPoints !== b.totalPoints) {
-        return b.totalPoints - a.totalPoints;
-      }
-      if (a.goalsBalance !== b.goalsBalance) {
-        return b.goalsBalance - a.goalsBalance;
-      }
-      if (a.goalsFavor !== b.goalsFavor) {
-        return b.goalsFavor - a.goalsFavor;
-      }
-      if (a.goalsOwn !== b.goalsOwn) {
-        return b.goalsOwn - a.goalsOwn;
-      }
-      return 0;
-    });
-  }
-
-
-
   public async getLeaderboard(team:homeOrAway): Promise<ILeaderboard[]> {
     const matches = await this.matches;
     if (team === 'homeTeam') {
       const leaderboard = this.CaseHomeTeam(matches, team);
-      return this.putInOrder(leaderboard);
+      return putInOrder(leaderboard) as ILeaderboard[];
     }
     const leaderboard = this.CaseAwayTeam(matches, team);
-    return this.putInOrder(leaderboard);
+    return putInOrder(leaderboard) as ILeaderboard[];
   }
 }
