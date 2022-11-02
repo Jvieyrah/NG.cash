@@ -91,13 +91,33 @@ export default class LeaderboardService {
     return this.leaderboard;
   }
 
+  public putInOrder(matches: ILeaderboard[]) {
+    return matches.sort((a, b) => {
+      if (a.totalPoints !== b.totalPoints) {
+        return b.totalPoints - a.totalPoints;
+      }
+      if (a.goalsBalance !== b.goalsBalance) {
+        return b.goalsBalance - a.goalsBalance;
+      }
+      if (a.goalsFavor !== b.goalsFavor) {
+        return b.goalsFavor - a.goalsFavor;
+      }
+      if (a.goalsOwn !== b.goalsOwn) {
+        return b.goalsOwn - a.goalsOwn;
+      }
+      return 0;
+    });
+  }
+
+
+
   public async getLeaderboard(team:homeOrAway): Promise<ILeaderboard[]> {
     const matches = await this.matches;
     if (team === 'homeTeam') {
       const leaderboard = this.CaseHomeTeam(matches, team);
-      return leaderboard.sort((a, b) => b.totalPoints - a.totalPoints); // retorna a tabela de classificação ordenada por pontos
+      return this.putInOrder(leaderboard);
     }
     const leaderboard = this.CaseAwayTeam(matches, team);
-    return leaderboard.sort((a, b) => b.totalPoints - a.totalPoints); // retorna a tabela de classificação ordenada por pontos
+    return this.putInOrder(leaderboard);
   }
 }
