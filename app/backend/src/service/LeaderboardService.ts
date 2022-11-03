@@ -109,7 +109,7 @@ export default class LeaderboardService {
   }
 
   public async getLeaderboard(team:homeOrAway): Promise<ILeaderboard[]> {
-    const matches = await this.matches;
+    const matches = await this._matchService.getMatchInProgess(false)
     if (team === 'homeTeam') {
       const leaderboard = this.CaseHomeTeam(matches, team);
       return putInOrder(leaderboard) as ILeaderboard[];
