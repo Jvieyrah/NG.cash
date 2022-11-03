@@ -1,5 +1,5 @@
 import MatchService from './MatchService ';
-// import TeamService from './TeamService';
+import compiledLeaderboards from '../helpers/compilerLB';
 import ILeaderboard from '../entities/Ileaderboard.interface';
 import Imatch from '../entities/IMatch.interface';
 
@@ -109,12 +109,19 @@ export default class LeaderboardService {
   }
 
   public async getLeaderboard(team:homeOrAway): Promise<ILeaderboard[]> {
-    const matches = await this._matchService.getMatchInProgess(false)
+    const matches = await this._matchService.getMatchInProgess(false);
     if (team === 'homeTeam') {
       const leaderboard = this.CaseHomeTeam(matches, team);
       return putInOrder(leaderboard) as ILeaderboard[];
     }
     const leaderboard = this.CaseAwayTeam(matches, team);
     return putInOrder(leaderboard) as ILeaderboard[];
+  }
+
+  public async getAllLeaderboard(): Promise<ILeaderboard[]> {
+    const teamsAway = await this.getLeaderboard('awayTeam');
+    const teamsHome = await this.getLeaderboard('homeTeam');
+    const finalValues = compiledLeaderboards(teamsAway, teamsHome);
+    return putInOrder(finalValues) as ILeaderboard[];
   }
 }
