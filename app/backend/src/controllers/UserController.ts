@@ -15,7 +15,12 @@ export default class UserController {
   public async validateLogin(req: Request, res: Response): Promise<Response> {
     const token: string | any = req.headers.authorization;
     const user = await this.userService.validateLogin(token);
-    const { role } = user;
-    return res.status(200).send({ role });
+    const { username } = user;
+    return res.status(200).send({ username });
+  }
+
+  public async createUsers(req: Request, res: Response): Promise<Response> {
+    const token = await this.userService.createUsers(req.body);
+    return res.status(200).send({ token });
   }
 }

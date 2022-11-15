@@ -2,10 +2,10 @@ import * as JWT from 'jsonwebtoken';
 import 'dotenv/config';
 import IUser from '../entities/Iuser.interface';
 
-const secret = process.env.JWT_SECRET || ('secret' as JWT.Secret);
+const secret = process.env.JWT_SECRET as JWT.Secret;
 
 export default class TokenManager {
-  private static expiresIn = '1h';
+  private static expiresIn = '24h';
 
   public static generateToken(payload: unknown): string {
     const jwtConfig: JWT.SignOptions = {

@@ -1,7 +1,7 @@
 import MatchService from './MatchService ';
 import compiledLeaderboards from '../helpers/compilerLB';
 import ILeaderboard from '../entities/Ileaderboard.interface';
-import Imatch from '../entities/IMatch.interface';
+import Imatch from '../entities/Itransacton.interface';
 
 type homeOrAway = 'homeTeam' | 'awayTeam';
 

@@ -1,6 +1,6 @@
-import matches from '../database/models/sequelizeMatches';
-import teams from '../database/models/sequelizeTeams';
-import Imatch from '../entities/IMatch.interface';
+import matches from '../database/models/sequelizeTransactions';
+import teams from '../database/models/sequelizeAccounts';
+import Imatch from '../entities/Itransacton.interface';
 import StructuredError from '../errors/StructuredError';
 
 export default class MatchService {

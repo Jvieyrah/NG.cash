@@ -1,13 +1,15 @@
 import 'dotenv/config';
 import { Options } from 'sequelize';
+import * as pg from 'pg';
 
 const config: Options = {
-  username: process.env.DB_USER || 'root',
-  password: process.env.DB_PASS || '123456',
-  database: 'TRYBE_FUTEBOL_CLUBE',
-  host: process.env.DB_HOST || 'localhost',
-  port: Number(process.env.DB_PORT) || 3002,
-  dialect: 'mysql',
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT),
+  dialect: 'postgres',
+  dialectModule: pg,
   dialectOptions: {
     timezone: 'Z',
   },

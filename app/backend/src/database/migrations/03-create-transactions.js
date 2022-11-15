@@ -1,6 +1,6 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('matches', {
+    await queryInterface.createTable('transactions', {
       id: {
         primaryKey: true,
         autoIncrement: true,
@@ -42,6 +42,6 @@ module.exports = {
     });
   },
   down: async (queryInterface) => {
-    await queryInterface.dropTable('matches');
+    await queryInterface.dropTable('transactions');
   },
 };

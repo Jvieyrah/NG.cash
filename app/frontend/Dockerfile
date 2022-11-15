@@ -4,7 +4,12 @@ WORKDIR /app-frontend
 
 COPY package.json .
 
-RUN npm install
+RUN set -ex \
+    && npm install \
+    && npm install sequelize pg\
+    && postgressql-dev
+
+# RUN npm install
 
 COPY . .
 
