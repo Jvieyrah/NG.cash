@@ -2,8 +2,7 @@ import 'express-async-errors';
 import * as express from 'express';
 import userRouter from './routes/userRouter';
 import accountRouter from './routes/accountRouter';
-// import matchRouter from './routes/matchRouter';
-// import lbRouter from './routes/leaderboardRouter';
+import transactionRouter from './routes/transactionRouter';
 import errorMiddleware from './middleware/errorMiddleware';
 
 class App {
@@ -34,8 +33,7 @@ class App {
   private routes():void {
     this.app.use(userRouter);
     this.app.use(accountRouter);
-    // this.app.use(matchRouter);
-    // this.app.use(lbRouter);
+    this.app.use(transactionRouter); 
     this.app.use(errorMiddleware);
   }
 
