@@ -1,9 +1,9 @@
 import 'express-async-errors';
 import * as express from 'express';
 import userRouter from './routes/userRouter';
-import teamRouter from './routes/teamRouter';
-import matchRouter from './routes/matchRouter';
-import lbRouter from './routes/leaderboardRouter';
+import accountRouter from './routes/accountRouter';
+// import matchRouter from './routes/matchRouter';
+// import lbRouter from './routes/leaderboardRouter';
 import errorMiddleware from './middleware/errorMiddleware';
 
 class App {
@@ -33,9 +33,9 @@ class App {
 
   private routes():void {
     this.app.use(userRouter);
-    this.app.use(teamRouter);
-    this.app.use(matchRouter);
-    this.app.use(lbRouter);
+    this.app.use(accountRouter);
+    // this.app.use(matchRouter);
+    // this.app.use(lbRouter);
     this.app.use(errorMiddleware);
   }
 

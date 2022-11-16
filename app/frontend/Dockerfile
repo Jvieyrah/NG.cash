@@ -6,8 +6,8 @@ COPY package.json .
 
 RUN set -ex \
     && npm install \
-    && npm install sequelize pg\
-    && postgressql-dev
+    && npm install sequelize pg
+
 
 # RUN npm install
 
@@ -15,4 +15,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+# CMD ["npm", "start"]

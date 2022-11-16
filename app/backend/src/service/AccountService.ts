@@ -1,10 +1,9 @@
 import accounts from '../database/models/sequelizeAccounts';
 import Iaccount from '../entities/Iaccount.interface';
 import StructuredError from '../errors/StructuredError';
-import TokenManager from '../helpers/tokenManager';
 import UserService from './UserService';
 
-export default class AcocountService {
+export default class AccountService {
   private _accountModel: typeof accounts;
   constructor() {
     this._accountModel = accounts;

@@ -16,8 +16,8 @@ export default class UserService {
     const passwordMatch = await bcrypt.compare(password, userExists.password);
     if (!passwordMatch) throw new StructuredError('Incorrect email or password', 401);
     // caso esteja tudo certo, gera token
-    const { role } = userExists;
-    const token = tokenManager.generateToken({ username});
+    const { accountID } = userExists;
+    const token = tokenManager.generateToken({ username, accountID });
     return token;
   };
 
@@ -43,28 +43,8 @@ export default class UserService {
     // caso esteja tudo certo, cria o usuário já vinclulado a conta
     await users.create({ username, password: hash, accountID: id });
     // gera token
-    const token = tokenManager.generateToken({ username });
+    const token = tokenManager.generateToken({ username, accountID: id  });
     return token;
-  };
-
-
-
-    
-    
-
-
-
-}
-function userCheck(username: any, password: any) {
-  if (!username || !password)
-    throw new StructuredError('All fields must be filled', 400);
-  if (username.length < 3)
-    throw new StructuredError('Username must have at least 3 characters', 400);
-  if (password.length < 8)
-    throw new StructuredError('Password must have at least 8 characters', 400);
-  //  a senha deve ter pelo menos um número e uma letra maiúscula
-  const passwordRegex = /^(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-  if (!passwordRegex.test(password))
-    throw new StructuredError('Password must have at least one uppercase letter and one number', 400);
+  };  
 }
 
