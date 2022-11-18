@@ -8,6 +8,7 @@ class tansactions extends Model {
   declare creditedAccountId: number;
   declare value: number;
   declare createdAt: number;
+  static Op: any;
 }
 
 tansactions.init({
